@@ -1,3 +1,3 @@
-## Sidecar
+## Pipefitter
 
-A Slack bot that creates channels for side conversations
+A Github bot that rebuilds your `db/structure.sql`
