@@ -13,19 +13,24 @@ module Pipefitter
 
     post "/payload" do
       payload = JSON.parse(request.body.read, object_class: HashWithIndifferentAccess)
+      owner = payload.fetch(:repository).fetch(:owner).fetch(:login)
+      repo = payload.fetch(:repository).fetch(:name)
+
       base_pull_request = PullRequest.find(
-        owner:  payload.fetch(:repository).fetch(:owner).fetch(:login),
-        repo:   payload.fetch(:repository).fetch(:name),
+        owner:  owner,
+        repo:   repo,
         number: payload.fetch(:issue).fetch(:number),
       )
       builder = StructureBuilder.new(branch: base_pull_request.branch)
       builder.run
 
       PullRequest.create(
+        owner:  owner,
+        repo:   repo,
         base: base_pull_request.branch,
         head: builder.new_branch,
         title: "Pipefitter structure update for #{base_pull_request.branch}",
-        body: "Updates PR ##{pull_request.number}",
+        body: "Updates PR ##{base_pull_request.number}",
       )
     end
   end

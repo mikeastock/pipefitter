@@ -12,8 +12,18 @@ module Pipefitter
       )
     end
 
-    def self.create(base:, head:, title:, body:)
-      Pipefitter.github_client
+    def self.create(owner:, repo:, base:, head:, title:, body:)
+      new(Pipefitter.
+        github_client.
+        pull_requests.
+        create(
+          owner,
+          repo,
+          base: base,
+          head: head,
+          title: title,
+          body: body,
+        ))
     end
 
     def branch
