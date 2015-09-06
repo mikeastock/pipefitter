@@ -53,6 +53,8 @@ GEM
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
+    rack-test (0.6.3)
+      rack (>= 1.0)
     rake (10.4.2)
     redis (3.2.1)
     redis-namespace (1.5.2)
@@ -99,6 +101,7 @@ DEPENDENCIES
   git
   github_api
   pry
+  rack-test
   rake
   rspec
   shotgun
