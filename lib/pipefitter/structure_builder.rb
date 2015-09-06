@@ -19,7 +19,7 @@ module Pipefitter
     end
 
     def changed?
-      git.diff.any? { |file| file.path == "db/structure.sql" }
+      git.diff.any? { |file| file.path == structure_file }
     end
 
     def new_branch
@@ -42,11 +42,11 @@ module Pipefitter
     end
 
     def checkout_master_structure
-      git.checkout_file("master", "db/structure.sql")
+      git.checkout_file("master", structure_file)
     end
 
     def build
-      Dir.chdir("repos/procore") do
+      Dir.chdir("repos/loft_hunter") do
         Bundler.with_clean_env do
           system("bundle install")
           system("bin/rake db:drop db:create db:structure:load db:migrate")
@@ -55,7 +55,7 @@ module Pipefitter
     end
 
     def stage
-      git.add("db/structure.sql")
+      git.add(structure_file)
     end
 
     def create_new_branch
@@ -68,6 +68,10 @@ module Pipefitter
 
     def push
       git.push("origin", new_branch)
+    end
+
+    def structure_file
+      "db/structure.sql"
     end
   end
 end
