@@ -13,9 +13,13 @@ module Pipefitter
     def run
       setup_branch
       checkout_master_structure
-      build_structure
-      create_new_branch
-      commit_structure
+      build
+      stage
+      if changed?
+        create_new_branch
+        commit
+        push
+      end
     end
 
     private
@@ -37,20 +41,31 @@ module Pipefitter
       git.checkout_file("master", "db/structure.sql")
     end
 
-    def build_structure
-      Bundler.with_clean_env do
-        system("bundle install")
-        system("bin/rake db:drop db:create db:structure:load db:migrate")
+    def build
+      Dir.chdir("repos/procore") do
+        Bundler.with_clean_env do
+          system("bundle install")
+          system("bin/rake db:drop db:create db:structure:load db:migrate")
+        end
       end
+    end
+
+    def stage
+      git.add("db/structure.sql")
     end
 
     def create_new_branch
       git.branch(new_branch).checkout
     end
 
-    def commit_structure
-      git.add("db/structure.sql")
+    def commit
       git.commit("Pipefitter updated structure at #{Time.now}")
+    end
+
+    def push
+    end
+
+    def changed?
     end
 
     def new_branch
