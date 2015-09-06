@@ -2,13 +2,13 @@ source "https://rubygems.org/"
 
 gem "sinatra"
 
+gem "activesupport"
 gem "dotenv"
-gem "httparty"
-gem "rake"
-gem "slack-notifier"
+gem "github_api"
 
 group :development do
   gem "pry"
+  gem "rake"
   gem "shotgun"
 end
 
