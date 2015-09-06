@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
+
+lib = File.expand_path("../../lib", __FILE__)
+$LOAD_PATH.unshift(lib)
 require "pipefitter"
 
 # You can add fixtures and/or initialization code here to make experimenting
