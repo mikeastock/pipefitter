@@ -6,10 +6,6 @@ module Pipefitter
       @branch = branch
     end
 
-    def self.run(branch:)
-      new(branch: branch).run
-    end
-
     def run
       setup_branch
       checkout_master_structure

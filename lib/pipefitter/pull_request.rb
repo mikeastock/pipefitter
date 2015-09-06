@@ -7,14 +7,21 @@ module Pipefitter
     end
 
     def self.find(owner:, repo:, number:)
-      github = Github.new(basic_auth: ENV.fetch("GITHUB_TOKEN"))
       new(
-        github.pull_requests.find(owner, repo, number)
+        Pipefitter.github_client.pull_requests.find(owner, repo, number)
       )
+    end
+
+    def self.create(base:, head:, title:, body:)
+      Pipefitter.github_client
     end
 
     def branch
       pull_request.head.ref
+    end
+
+    def number
+      pull_request.number
     end
 
     private
