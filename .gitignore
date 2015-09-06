@@ -1,3 +1,5 @@
 .env
 repos/
 .ruby-version
+log/
+tmp/
