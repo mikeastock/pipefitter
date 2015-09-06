@@ -1,6 +1,6 @@
 RSpec.describe Pipefitter::StructureBuilder do
   let(:branch) { "fake_branch" }
-  let(:builder) { Pipefitter::StructureBuilder.new(branch: branch) }
+  let(:builder) { Pipefitter::StructureBuilder.new(repo: "procore", branch: branch) }
 
   describe "#run" do
     let(:git) { spy }

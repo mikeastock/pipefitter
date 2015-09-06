@@ -2,7 +2,8 @@ require "git"
 
 module Pipefitter
   class StructureBuilder
-    def initialize(branch:)
+    def initialize(repo:, branch:)
+      @repo = repo
       @branch = branch
     end
 
@@ -28,10 +29,10 @@ module Pipefitter
 
     private
 
-    attr_reader :branch
+    attr_reader :repo, :branch
 
     def git
-      @git ||= Git.open(File.join("repos", "procore"))
+      @git ||= Git.open(repo_path)
     end
 
     def setup_branch
@@ -46,7 +47,7 @@ module Pipefitter
     end
 
     def build
-      Dir.chdir("repos/loft_hunter") do
+      Dir.chdir(repo_path) do
         Bundler.with_clean_env do
           system("bundle install")
           system("bin/rake db:drop db:create db:structure:load db:migrate")
@@ -72,6 +73,10 @@ module Pipefitter
 
     def structure_file
       "db/structure.sql"
+    end
+
+    def repo_path
+      File.join("repos", repo)
     end
   end
 end

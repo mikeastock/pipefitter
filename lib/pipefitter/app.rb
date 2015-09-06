@@ -21,7 +21,11 @@ module Pipefitter
         repo:   repo,
         number: payload.fetch(:issue).fetch(:number),
       )
-      builder = StructureBuilder.new(branch: base_pull_request.branch)
+
+      builder = StructureBuilder.new(
+        repo: repo,
+        branch: base_pull_request.branch,
+      )
       builder.run
 
       PullRequest.create(
