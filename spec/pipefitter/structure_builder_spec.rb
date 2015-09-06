@@ -41,15 +41,13 @@ RSpec.describe Pipefitter::StructureBuilder do
     end
 
     context "changed" do
-      let(:new_branch) { branch + "_pipefitter_structure" }
-
       before do
         allow(builder).to receive(:changed?) { true }
       end
 
       it "creates a new branch" do
         builder.run
-        expect(git).to have_received(:branch).with(new_branch)
+        expect(git).to have_received(:branch).with(builder.new_branch)
       end
 
       it "commits" do
@@ -59,7 +57,7 @@ RSpec.describe Pipefitter::StructureBuilder do
 
       it "pushes" do
         builder.run
-        expect(git).to have_received(:push).with("origin", new_branch)
+        expect(git).to have_received(:push).with("origin", builder.new_branch)
       end
     end
   end
@@ -83,6 +81,12 @@ RSpec.describe Pipefitter::StructureBuilder do
 
         expect(builder.changed?).to be false
       end
+    end
+  end
+
+  describe "#new_branch" do
+    it "appends _pipefitter_structure" do
+      expect(builder.new_branch).to eq(branch + "_pipefitter_structure")
     end
   end
 end

@@ -26,6 +26,10 @@ module Pipefitter
       git.diff.any? { |file| file.path == "db/structure.sql" }
     end
 
+    def new_branch
+      branch + "_pipefitter_structure"
+    end
+
     private
 
     attr_reader :branch
@@ -68,10 +72,6 @@ module Pipefitter
 
     def push
       git.push("origin", new_branch)
-    end
-
-    def new_branch
-      branch + "_pipefitter_structure"
     end
   end
 end
