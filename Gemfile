@@ -5,6 +5,7 @@ gem "sinatra"
 gem "activesupport"
 gem "dotenv"
 gem "github_api"
+gem "git"
 
 group :development do
   gem "pry"
