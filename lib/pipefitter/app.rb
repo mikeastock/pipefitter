@@ -10,8 +10,7 @@ module Pipefitter
     end
 
     post "/payload" do
-      payload = JSON.parse(request.body.read)
-      StructureWorker.perform_async(payload)
+      StructureWorker.perform_async(request.body.read)
     end
   end
 end
