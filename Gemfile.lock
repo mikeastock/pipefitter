@@ -11,6 +11,7 @@ GEM
     coderay (1.1.0)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
+    diff-lcs (1.2.5)
     dotenv (2.0.2)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
@@ -48,9 +49,20 @@ GEM
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
-    rack-test (0.6.3)
-      rack (>= 1.0)
     rake (10.4.2)
+    rspec (3.2.0)
+      rspec-core (~> 3.2.0)
+      rspec-expectations (~> 3.2.0)
+      rspec-mocks (~> 3.2.0)
+    rspec-core (3.2.3)
+      rspec-support (~> 3.2.0)
+    rspec-expectations (3.2.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-mocks (3.2.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-support (3.2.2)
     shotgun (0.9.1)
       rack (>= 1.0)
     sinatra (1.4.6)
@@ -71,10 +83,9 @@ DEPENDENCIES
   dotenv
   git
   github_api
-  minitest
   pry
-  rack-test
   rake
+  rspec
   shotgun
   sinatra
 
