@@ -63,9 +63,11 @@ module Pipefitter
     end
 
     def push
+      git.push("origin", new_branch)
     end
 
     def changed?
+      git.diff.any? { |file| file.path == "db/structure.sql" }
     end
 
     def new_branch
