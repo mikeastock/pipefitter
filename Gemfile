@@ -8,6 +8,7 @@ gem "dotenv"
 gem "git"
 gem "github_api"
 gem "sidekiq"
+gem "sidekiq-failures"
 
 group :development do
   gem "pry"
