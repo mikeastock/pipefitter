@@ -18,7 +18,9 @@ Sidekiq.configure_server do |config|
 end
 
 require "sidekiq/web"
-Sidekiq::Web.use(Rack::Session::Cookie, secret: ENV["RACK_SESSION_COOKIE"])
+Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+  username == ENV.fetch("SIDEKIQ_USERNAME") && password == ENV.fetch("SIDEKIQ_PASSWORD")
+end
 
 # Load app
 require "pipefitter"
