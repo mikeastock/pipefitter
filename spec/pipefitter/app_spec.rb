@@ -15,10 +15,22 @@ RSpec.describe Pipefitter::App do
   end
 
   describe "POST /payload" do
-    it "process's a Github webhook payload" do
-      expect(Pipefitter::StructureWorker).to receive(:perform_async)
+    context "comment body includes pipfitter" do
+      it "process's a Github webhook payload" do
+        body = File.read("spec/fixtures/webhook_body.json")
+        expect(Pipefitter::StructureWorker).to receive(:perform_async)
 
-      post "/payload"
+        post "/payload", body
+      end
+    end
+
+    context "comment body does not include pipfitter" do
+      it "skips processing request" do
+        body = File.read("spec/fixtures/webhook_body_without_pipefitter.json")
+        expect(Pipefitter::StructureWorker).to_not receive(:perform_async)
+
+        post "/payload", body
+      end
     end
   end
 end
