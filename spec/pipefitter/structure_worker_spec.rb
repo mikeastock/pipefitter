@@ -3,7 +3,7 @@ RSpec.describe Pipefitter::StructureWorker do
     let(:owner) { "mikeastock" }
     let(:repo) { "sample_app" }
     let(:number) { 1 }
-    let(:unparsed) do
+    let(:payload) do
       {
         repository: {
           name: repo,
@@ -14,7 +14,7 @@ RSpec.describe Pipefitter::StructureWorker do
         issue: {
           number: number
         }
-      }.to_json
+      }
     end
 
     it "find's the base pull request" do
@@ -27,7 +27,7 @@ RSpec.describe Pipefitter::StructureWorker do
         number: number
       ) { spy }
 
-      Pipefitter::StructureWorker.new.perform(unparsed)
+      Pipefitter::StructureWorker.new.perform(payload)
     end
 
     it "instantiate's Pipefitter::StructureBuilder" do
@@ -42,7 +42,7 @@ RSpec.describe Pipefitter::StructureWorker do
         branch: base_pull_request.branch
       ) { spy }
 
-      Pipefitter::StructureWorker.new.perform(unparsed)
+      Pipefitter::StructureWorker.new.perform(payload)
     end
 
     it "calls Pipefitter::StructureBuilder#run" do
@@ -52,7 +52,7 @@ RSpec.describe Pipefitter::StructureWorker do
       allow(Pipefitter::PullRequest).to receive(:create) { spy }
       allow(Pipefitter::StructureBuilder).to receive(:new) { builder }
 
-      Pipefitter::StructureWorker.new.perform(unparsed)
+      Pipefitter::StructureWorker.new.perform(payload)
       expect(builder).to have_received(:run)
     end
 
@@ -75,7 +75,7 @@ RSpec.describe Pipefitter::StructureWorker do
           body:  "Updates PR ##{number}",
         )
 
-        Pipefitter::StructureWorker.new.perform(unparsed)
+        Pipefitter::StructureWorker.new.perform(payload)
       end
     end
   end
