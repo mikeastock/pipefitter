@@ -23,7 +23,7 @@ module Pipefitter
       )
       builder.run
 
-      if builder.changed?
+      if builder.structure_conflict?
         PullRequest.create(
           owner: owner,
           repo:  repo,

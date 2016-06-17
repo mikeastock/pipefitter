@@ -9,17 +9,27 @@ module Pipefitter
 
     def run
       setup_branch
-      checkout_master_structure
-      build
-      stage
-      if changed?
-        create_new_branch
-        commit
-        push
+      merge_master_in
+
+      if only_structure_conflict?
+        create_new_structure
       end
     end
 
-    def changed?
+    def create_new_structure
+      checkout_master_structure
+      build
+      stage
+      create_new_branch
+      commit
+      push
+    end
+
+    def only_structure_conflict?
+      git.diff.count == 1 && structure_conflict?
+    end
+
+    def structure_conflict?
       git.diff.any? { |file| file.path == structure_file }
     end
 
@@ -40,6 +50,10 @@ module Pipefitter
       git.reset_hard
       git.checkout(branch)
       git.pull("origin", branch)
+    end
+
+    def merge_master_in
+      git.pull("origin", "master")
     end
 
     def checkout_master_structure

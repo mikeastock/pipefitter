@@ -30,56 +30,74 @@ RSpec.describe Pipefitter::StructureBuilder do
       expect(git).to have_received(:pull).with("origin", branch)
     end
 
-    it "checkouts master's structure" do
+    it "merges in master" do
       builder.run
+      expect(git).to have_received(:pull).with("origin", "master")
+    end
+  end
+
+  describe "#create_new_structure" do
+    let(:git) { spy }
+
+    before do
+      allow(Git).to receive(:open) { git }
+      allow(builder).to receive(:build)
+    end
+
+    it "checkouts master's structure" do
+      builder.create_new_structure
       expect(git).to have_received(:checkout_file).with("master", "db/structure.sql")
     end
 
     it "stages db/structure.sql" do
-      builder.run
+      builder.create_new_structure
       expect(git).to have_received(:add).with("db/structure.sql")
     end
 
-    context "changed" do
-      before do
-        allow(builder).to receive(:changed?) { true }
-      end
+    it "creates a new branch" do
+      builder.create_new_structure
+      expect(git).to have_received(:branch).with(builder.new_branch)
+    end
 
-      it "creates a new branch" do
-        builder.run
-        expect(git).to have_received(:branch).with(builder.new_branch)
-      end
+    it "commits" do
+      builder.create_new_structure
+      expect(git).to have_received(:commit).with(/Pipefitter updated structure at/)
+    end
 
-      it "commits" do
-        builder.run
-        expect(git).to have_received(:commit).with(/Pipefitter updated structure at/)
-      end
-
-      it "pushes" do
-        builder.run
-        expect(git).to have_received(:push).with("origin", builder.new_branch)
-      end
+    it "pushes" do
+      builder.create_new_structure
+      expect(git).to have_received(:push).with("origin", builder.new_branch)
     end
   end
 
-  describe "#changed?" do
-    context "changed" do
+  describe "#only_structure_conflict?" do
+    it "checks if there is one conflict that is structure file" do
+      diff = [double(path: "db/structure.sql")]
+      git = double(diff: diff)
+      allow(Git).to receive(:open) { git }
+
+      expect(builder.structure_conflict?).to be true
+    end
+  end
+
+  describe "#structure_conflict?" do
+    context "conflict" do
       it "checks if db/structure.sql has changed" do
-        diff = [double(path: "db/structure.sql")]
+        diff = [double(path: "db/structure.sql"), double(path: "app/models/user.rb")]
         git = double(diff: diff)
         allow(Git).to receive(:open) { git }
 
-        expect(builder.changed?).to be true
+        expect(builder.structure_conflict?).to be true
       end
     end
 
-    context "not changed" do
+    context "no conflict" do
       it "checks if db/structure.sql has changed" do
         diff = [double(path: "fake_file_we_do_not_care_about")]
         git = double(diff: diff)
         allow(Git).to receive(:open) { git }
 
-        expect(builder.changed?).to be false
+        expect(builder.structure_conflict?).to be false
       end
     end
   end
